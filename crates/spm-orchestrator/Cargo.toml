@@ -1,0 +1,19 @@
+[package]
+name = "spm-orchestrator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Shared capture orchestration (collect -> normalize -> analyze -> persist), platform-agnostic"
+
+[dependencies]
+spm-core.workspace = true
+spm-engine.workspace = true
+spm-storage.workspace = true
+spm-analysis.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+sysinfo.workspace = true
