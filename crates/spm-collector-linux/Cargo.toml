@@ -1,0 +1,18 @@
+[package]
+name = "spm-collector-linux"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Linux platform collectors (interface-only stubs pending Linux implementation/testing)"
+
+[dependencies]
+spm-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+chrono.workspace = true
+uuid.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+tokio.workspace = true
