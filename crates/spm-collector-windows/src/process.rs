@@ -77,8 +77,13 @@ fn snapshot(session_id: uuid::Uuid, enrich: bool) -> Vec<ProcessInfo> {
             info.command_line = if info.arguments.is_empty() { None } else { Some(info.arguments.join(" ")) };
             info.environment = parse_environ(proc.environ());
 
+            // sysinfo uses 0 as a "couldn't determine this" sentinel here
+            // (common for protected/other-user processes when not
+            // elevated) rather than a real epoch-0 timestamp — treat it as
+            // unknown, not as 1970-01-01, or every such process corrupts
+            // the timeline with a multi-decade bogus offset.
             let start_secs = proc.start_time();
-            info.start_time = chrono::DateTime::from_timestamp(start_secs as i64, 0);
+            info.start_time = if start_secs > 0 { chrono::DateTime::from_timestamp(start_secs as i64, 0) } else { None };
 
             info.user = proc
                 .user_id()

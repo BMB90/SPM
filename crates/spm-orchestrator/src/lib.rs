@@ -45,6 +45,15 @@ pub fn begin_session(storage: &Storage, notes: Option<String>) -> Result<BootSes
 
     let mut session = manager.new_session(hostname, os_version);
     session.notes = notes;
+    // `System::boot_time()` returns the system's actual last-boot time
+    // (seconds since Unix epoch), independent of when this capture
+    // process started — without this, timeline offsets would be computed
+    // against `capture_started_at` and every already-running process
+    // would show as having started an enormous negative offset ago.
+    let boot_time_secs = System::boot_time();
+    if boot_time_secs > 0 {
+        session.boot_time = chrono::DateTime::from_timestamp(boot_time_secs as i64, 0);
+    }
     storage.create_session(&session)?;
     Ok(session)
 }

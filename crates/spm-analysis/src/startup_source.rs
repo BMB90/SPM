@@ -17,6 +17,23 @@ impl StartupSourceDetector {
         let names_by_pid: HashMap<u32, String> =
             normalized.processes.iter().map(|(pid, p)| (*pid, p.executable_name.clone())).collect();
 
+        // The service collector observes `ServiceInfo::pid` but has no way
+        // to write back into `ProcessInfo` (collectors never see each
+        // other's output — see docs/collector-architecture.md). Do that
+        // linkage here, once, before classification: many processes
+        // (svchost.exe hosting a single service, most first-party
+        // services) are otherwise indistinguishable from an unexplained
+        // user process.
+        let service_name_by_pid: HashMap<u32, String> =
+            normalized.services.values().filter_map(|s| s.pid.map(|pid| (pid, s.name.clone()))).collect();
+        for (pid, process) in normalized.processes.iter_mut() {
+            if process.owning_service.is_none() {
+                if let Some(service_name) = service_name_by_pid.get(pid) {
+                    process.owning_service = Some(service_name.clone());
+                }
+            }
+        }
+
         for process in normalized.processes.values_mut() {
             if process.startup_source.is_some() {
                 continue;
