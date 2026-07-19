@@ -1,0 +1,27 @@
+/target
+**/target
+Cargo.lock.bak
+
+# Node / frontend
+node_modules/
+apps/desktop/dist/
+apps/desktop/src-tauri/target/
+
+# Data
+*.db
+*.db-shm
+*.db-wal
+/data/
+/exports/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
