@@ -6,6 +6,9 @@ Cargo.lock.bak
 node_modules/
 apps/desktop/dist/
 apps/desktop/src-tauri/target/
+apps/desktop/vite.config.js
+apps/desktop/vite.config.d.ts
+apps/desktop/*.tsbuildinfo
 
 # Data
 *.db
